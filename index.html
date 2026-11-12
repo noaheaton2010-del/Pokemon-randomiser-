@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#18213b">
+<title>Pokémon Randomizer & Battle</title>
+<style>
+:root{color-scheme:dark;--bg:#10172a;--panel:#1b2742;--panel2:#243352;--text:#f4f6ff;--muted:#b7c2dc;--gold:#ffd45c;--blue:#76b7ff;--red:#ff8585;--green:#8ce0a5}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#25385f 0,#10172a 48rem);color:var(--text);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{padding:28px 16px 18px;text-align:center}h1{font-size:clamp(1.6rem,5vw,2.5rem);margin:0 0 8px}header p{margin:0;color:var(--muted)}
+main{max-width:1050px;margin:auto;padding:0 14px 48px}.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0 20px}
+button,select,input{font:inherit}button{border:0;border-radius:12px;padding:11px 15px;background:var(--gold);color:#20243a;font-weight:800;cursor:pointer}button:disabled{opacity:.5;cursor:wait}.tab{background:var(--panel2);color:var(--text)}.tab.active{background:var(--gold);color:#20243a}
+.panel{background:rgba(27,39,66,.96);border:1px solid #405277;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 12px 35px #0003}
+h2{margin:0 0 8px;font-size:1.35rem}h3{margin:0 0 8px}.muted,.hint{color:var(--muted)}.hint{font-size:.9rem}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin:14px 0}.field{display:flex;flex-direction:column;gap:5px;min-width:130px;flex:1}.field label{font-size:.9rem;color:var(--muted)}select,input{width:100%;padding:10px;border-radius:10px;border:1px solid #536789;background:#111b30;color:var(--text)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin-top:14px}.poke{background:#111c32;border:1px solid #3d5074;border-radius:15px;padding:12px;text-align:center;min-width:0}.poke img{width:100%;max-width:150px;aspect-ratio:1;object-fit:contain;image-rendering:auto}.poke h3{text-transform:capitalize;margin:3px 0}.types{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}.type{font-size:.75rem;padding:3px 8px;border-radius:20px;background:#344766;color:white;text-transform:capitalize}.shiny{color:var(--gold);font-weight:900}.status{min-height:1.5em;color:var(--muted);margin:10px 0}.hidden{display:none!important}
+.trainer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.trainer{background:#111c32;border:1px solid #3d5074;border-radius:14px;padding:13px}.checkline{display:flex;align-items:center;gap:8px;margin:10px 0;color:var(--muted)}.checkline input{width:auto}
+.battle-area{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}.side{background:#111c32;border:1px solid #3d5074;border-radius:14px;padding:12px}.side h3{text-align:center}.fighter{display:flex;align-items:center;gap:8px;margin:10px 0}.fighter img{width:76px;height:76px;object-fit:contain}.fighter-info{flex:1;min-width:0}.fighter-info strong{text-transform:capitalize}.hp{height:10px;background:#39445a;border-radius:20px;overflow:hidden;margin:5px 0}.hp span{display:block;height:100%;background:var(--green);width:100%;transition:width .2s}.log{background:#0b1221;border-radius:12px;padding:12px;max-height:240px;overflow:auto;margin-top:12px;font-size:.92rem}.log p{margin:4px 0}.battle-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.secondary{background:#8fbfff}.danger{background:#ffaaaa}.winner{color:var(--gold);font-size:1.2rem;font-weight:900}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:10px 16px 30px}a{color:#9ccaff}
+@media(max-width:520px){.panel{padding:14px}.battle-area{grid-template-columns:1fr}.controls>*{min-width:100%}.fighter img{width:65px;height:65px}}
+</style>
+</head>
+<body>
+<header><h1>⚡ Pokémon Randomizer & Battle</h1><p>A free fan-made website · No account · No saving · No installation</p></header>
+<main>
+<nav class="tabs" aria-label="Website modes">
+<button class="tab active" data-tab="generator">✨ Shiny & Pokémon Generator</button>
+<button class="tab" data-tab="battle">⚔️ Trainer Battle Generator</button>
+</nav>
+
+<section id="generator" class="panel">
+<h2>✨ Shiny & Pokémon Generator</h2>
+<p class="muted">Generate one Pokémon or a team of six. Each Pokémon has its own independent <b>1 in 300</b> shiny chance.</p>
+<div class="controls">
+<div class="field"><label for="gen-count">How many?</label><select id="gen-count"><option value="1">1 Pokémon</option><option value="6">6 Pokémon</option></select></div>
+<div class="field"><label for="gen-generation">Generation</label><select id="gen-generation"><option value="all">All generations</option><option value="1">Generation 1</option><option value="2">Generation 2</option><option value="3">Generation 3</option><option value="4">Generation 4</option><option value="5">Generation 5</option><option value="6">Generation 6</option><option value="7">Generation 7</option><option value="8">Generation 8</option><option value="9">Generation 9</option></select></div>
+<button id="generate">Generate Pokémon</button>
+</div>
+<div id="gen-status" class="status" role="status"></div><div id="gen-results" class="cards"></div>
+<p class="hint">A shiny is never guaranteed. The chance of at least one shiny increases with more independent encounters.</p>
+</section>
+
+<section id="battle" class="panel hidden">
+<h2>⚔️ Trainer Battle Generator</h2>
+<p class="muted">Set up two trainers, generate their teams, then watch an automatic battle. Pokémon with either selected type can join that trainer's team.</p>
+<div class="trainer-grid">
+<div class="trainer">
+<h3>🔴 Trainer 1</h3>
+<div class="field"><label for="t1-mode">Type selection</label><select id="t1-mode" class="mode"><option value="any">Any type</option><option value="single">Single type</option><option value="multiple">Multiple selected types</option><option value="random">Random types</option></select></div>
+<div class="field type-field hidden"><label for="t1-type">Choose a type</label><select id="t1-type" class="one-type"></select></div>
+<div class="field multi-field hidden"><label for="t1-types">Choose types (hold Ctrl on computer; tap choices on phone)</label><select id="t1-types" class="many-types" multiple size="5"></select></div>
+<div class="controls"><div class="field"><label for="t1-size">Team size</label><select id="t1-size"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option selected>6</option></select></div><div class="field"><label for="t1-level">Level (1–100)</label><input id="t1-level" type="number" min="1" max="100" value="50"></div></div>
+<label class="checkline"><input id="t1-legend" type="checkbox" checked> Allow legendary Pokémon</label>
+</div>
+<div class="trainer">
+<h3>🔵 Trainer 2</h3>
+<div class="field"><label for="t2-mode">Type selection</label><select id="t2-mode" class="mode"><option value="any">Any type</option><option value="single">Single type</option><option value="multiple">Multiple selected types</option><option value="random">Random types</option></select></div>
+<div class="field type-field hidden"><label for="t2-type">Choose a type</label><select id="t2-type" class="one-type"></select></div>
+<div class="field multi-field hidden"><label for="t2-types">Choose types (hold Ctrl on computer; tap choices on phone)</label><select id="t2-types" class="many-types" multiple size="5"></select></div>
+<div class="controls"><div class="field"><label for="t2-size">Team size</label><select id="t2-size"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option selected>6</option></select></div><div class="field"><label for="t2-level">Level (1–100)</label><input id="t2-level" type="number" min="1" max="100" value="50"></div></div>
+<label class="checkline"><input id="t2-legend" type="checkbox" checked> Allow legendary Pokémon</label>
+</div>
+</div>
+<div class="controls"><button id="make-teams">Generate both teams</button></div>
+<div id="team-status" class="status" role="status"></div>
+<div id="teams" class="battle-area"></div>
+<div id="battle-controls" class="hidden">
+<div class="controls">
+<div class="field"><label for="speed">Battle speed</label><select id="speed"><option value="1">x1</option><option value="2">x2</option><option value="4">x4</option></select></div>
+</div>
+<div class="battle-buttons"><button id="start-battle">▶ Start battle</button><button id="pause-battle" class="secondary" disabled>Ⅱ Pause</button><button id="skip-battle" class="secondary" disabled>» Skip to result</button><button id="rematch" class="secondary" disabled>↻ Rematch</button></div>
+<div id="battle-result" class="status"></div><div id="battle-log" class="log" aria-live="polite">Generate teams to prepare a battle.</div>
+</div>
+</section>
+</main>
+<footer>Pokémon is a trademark of Nintendo, Game Freak and The Pokémon Company. This fan-made project is not affiliated with them. Pokémon data and sprites are provided by <a href="https://pokeapi.co/" target="_blank" rel="noopener">PokéAPI</a>.</footer>
+<script>
+const API='https://pokeapi.co/api/v2';
+const typeNames=['normal','fire','water','electric','grass','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
+const ranges={1:[1,151],2:[152,251],3:[252,386],4:[387,493],5:[494,649],6:[650,721],7:[722,809],8:[810,905],9:[906,1025]};
+const $=id=>document.getElementById(id);
+const cache=new Map();
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function rangeFor(gen){return gen==='all'?[1,1025]:ranges[gen]}
+async function pokemon(id){if(cache.has(id))return cache.get(id);const p=await fetch(`${API}/pokemon/${id}`).then(r=>{if(!r.ok)throw Error('PokéAPI request failed');return r.json()});const species=await fetch(p.species.url).then(r=>r.json());const data={id:p.id,name:p.name,types:p.types.map(t=>t.type.name),stats:Object.fromEntries(p.stats.map(s=>[s.stat.name,s.base_stat])),sprite:p.sprites.other['official-artwork'].front_default||p.sprites.front_default,shiny:p.sprites.other['official-artwork'].front_shiny||p.sprites.front_shiny,legendary:species.is_legendary||species.is_mythical};cache.set(id,data);return data}
+function typeBadges(types){return `<div class="types">${types.map(t=>`<span class="type">${t}</span>`).join('')}</div>`}
+function card(p,shiny=false){return `<article class="poke"><img loading="lazy" src="${shiny?(p.shiny||p.sprite):p.sprite}" alt="${shiny?'Shiny':'Normal'} ${p.name}"><h3>${p.name.replaceAll('-',' ')}</h3>${typeBadges(p.types)}<p>${shiny?'<span class="shiny">✦ SHINY!</span>':'<span class="muted">Normal</span>'}</p></article>`}
+async function getRandomPokemon(lo,hi,filter=()=>true,used=new Set()){for(let tries=0;tries<80;tries++){const id=lo+Math.floor(Math.random()*(hi-lo+1));if(used.has(id))continue;const p=await pokemon(id);if(filter(p)){used.add(id);return p}}throw Error('Could not find enough Pokémon for those settings. Try a broader type selection.')}
+$('generate').addEventListener('click',async()=>{const btn=$('generate');btn.disabled=true;$('gen-results').innerHTML='';$('gen-status').textContent='Finding Pokémon…';try{const n=+$('gen-count').value,[lo,hi]=rangeFor($('gen-generation').value),used=new Set(),items=[];for(let i=0;i<n;i++){const p=await getRandomPokemon(lo,hi,()=>true,used);items.push({p,shiny:Math.random()<1/300})}$('gen-results').innerHTML=items.map(x=>card(x.p,x.shiny)).join('');const count=items.filter(x=>x.shiny).length;$('gen-status').textContent=count?`✨ You found ${count} shiny Pokémon!`:'No shiny this time — try again!'};}catch(e){$('gen-status').textContent=e.message}finally{btn.disabled=false}});
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));$('generator').classList.toggle('hidden',b.dataset.tab!=='generator');$('battle').classList.toggle('hidden',b.dataset.tab!=='battle')}));
+for(let t=1;t<=2;t++){for(const id of [`t${t}-type`,`t${t}-types`])$(id).innerHTML=typeNames.map(x=>`<option value="${x}">${x[0].toUpperCase()+x.slice(1)}</option>`).join('');$(`t${t}-mode`).addEventListener('change',e=>{const v=e.target.value;document.querySelector(`#t${t}-mode`).parentElement.parentElement.querySelector('.type-field').classList.toggle('hidden',v!=='single');document.querySelector(`#t${t}-mode`).parentElement.parentElement.querySelector('.multi-field').classList.toggle('hidden',v!=='multiple')})}
+function config(t){const mode=$(`t${t}-mode`).value;let types=[];if(mode==='single')types=[$(`t${t}-type`).value];if(mode==='multiple')types=[...$(`t${t}-types`).selectedOptions].map(o=>o.value);if(mode==='random')types=[pick(typeNames),pick(typeNames)];return {mode,types,size:+$(`t${t}-size`).value,level:Math.max(1,Math.min(100,+$(`t${t}-level`).value||50)),legend:$(`t${t}-legend`).checked}}
+let teams=[[],[]],battleTimer=null,paused=false,battleFinished=false,turn=0,activeTeams=null,logs=[];
+async function buildTeam(c){const used=new Set(),team=[];for(let i=0;i<c.size;i++){const p=await getRandomPokemon(1,1025,p=> (c.mode==='any'||c.types.some(t=>p.types.includes(t)))&&(c.legend||!p.legendary),used);team.push({...p,level:c.level,hp:Math.floor(((2*p.stats.hp)*c.level)/100)+c.level+10,maxHp:Math.floor(((2*p.stats.hp)*c.level)/100)+c.level+10})}return team}
+function renderTeams(){ $('teams').innerHTML=teams.map((team,i)=>`<div class="side"><h3>${i===0?'🔴 Trainer 1':'🔵 Trainer 2'}</h3>${team.map(p=>`<div class="fighter"><img src="${p.sprite}" alt=""><div class="fighter-info"><strong>${p.name}</strong><div class="muted">Lv. ${p.level} · ${p.types.join('/')}</div></div></div>`).join('')}</div>`).join('')}
+$('make-teams').addEventListener('click',async()=>{const b=$('make-teams');b.disabled=true;$('team-status').textContent='Generating teams…';$('teams').innerHTML='';$('battle-controls').classList.add('hidden');try{teams=[await buildTeam(config(1)),await buildTeam(config(2))];renderTeams();$('team-status').textContent='Both teams are ready!';$('battle-controls').classList.remove('hidden');$('battle-result').textContent='';$('battle-log').textContent='Press Start battle when you are ready.';$('rematch').disabled=true;}catch(e){$('team-status').textContent=e.message}finally{b.disabled=false}});
+function effectiveness(att,def){const chart={normal:{rock:.5,ghost:0,steel:.5},fire:{fire:.5,water:.5,grass:2,ice:2,bug:2,rock:.5,dragon:.5,steel:2},water:{fire:2,water:.5,grass:.5,ground:2,rock:2,dragon:.5},electric:{water:2,electric:.5,grass:.5,ground:0,flying:2,dragon:.5},grass:{fire:.5,water:2,grass:.5,poison:.5,ground:2,flying:.5,bug:.5,rock:2,dragon:.5,steel:.5},ice:{fire:.5,water:.5,grass:2,ice:.5,ground:2,flying:2,dragon:2,steel:.5},fighting:{normal:2,ice:2,poison:.5,flying:.5,psychic:.5,bug:.5,rock:2,ghost:0,dark:2,steel:2,fairy:.5},poison:{grass:2,poison:.5,ground:.5,rock:.5,ghost:.5,steel:0,fairy:2},ground:{fire:2,electric:2,grass:.5,poison:2,flying:0,bug:.5,rock:2,steel:2},flying:{electric:.5,grass:2,fighting:2,bug:2,rock:.5,steel:.5},psychic:{fighting:2,poison:2,psychic:.5,dark:0,steel:.5},bug:{fire:.5,grass:2,fighting:.5,poison:.5,flying:.5,psychic:2,ghost:.5,dark:2,steel:.5,fairy:.5},rock:{fire:2,ice:2,fighting:.5,ground:.5,flying:2,bug:2,steel:.5},ghost:{normal:0,psychic:2,ghost:2,dark:.5},dragon:{dragon:2,steel:.5,fairy:0},dark:{fighting:.5,psychic:2,ghost:2,dark:.5,fairy:.5},steel:{fire:.5,water:.5,electric:.5,ice:2,rock:2,steel:.5,fairy:2},fairy:{fire:.5,fighting:2,poison:.5,dragon:2,dark:2,steel:.5}};return def.reduce((m,d)=>m*(chart[att]?.[d]??1),1)}
+function hpBar(p){return `<div class="hp"><span style="width:${Math.max(0,p.hp/p.maxHp*100)}%"></span></div><small>${Math.max(0,p.hp)} / ${p.maxHp} HP</small>`}
+function updateBattleView(){const box=$('teams');box.innerHTML=activeTeams.map((team,i)=>`<div class="side"><h3>${i===0?'🔴 Trainer 1':'🔵 Trainer 2'}</h3>${team.map(p=>`<div class="fighter"><img src="${p.sprite}" alt=""><div class="fighter-info"><strong>${p.name}</strong><div class="muted">Lv. ${p.level} · ${p.types.join('/')}</div>${hpBar(p)}</div></div>`).join('')}</div>`).join('')}
+function addLog(s){logs.push(s);$('battle-log').innerHTML=logs.slice(-80).map(x=>`<p>${x}</p>`).join('');$('battle-log').scrollTop=$('battle-log').scrollHeight}
+function current(team){return team.find(p=>p.hp>0)}
+function battleStep(){if(battleFinished)return;const a=current(activeTeams[0]),b=current(activeTeams[1]);if(!a||!b){finishBattle();return}const first=(a.stats.speed>=b.stats.speed)?[a,b,0]:[b,a,1];for(const [att,def,side] of [first,[first[1],first[0],1-first[2]]]){if(att.hp<=0||def.hp<=0)continue;const attackStat=att.stats.attack+att.stats['special-attack'],defenseStat=def.stats.defense+def.stats['special-defense'];let mult=pick(att.types.map(t=>effectiveness(t,def.types)));const crit=Math.random()<.06?1.5:1;const damage=Math.max(1,Math.floor((((2*att.level/5+2)*Math.max(attackStat/2,1)*40/Math.max(defenseStat/2,1))/50+2)*mult*crit*(.85+Math.random()*.15)));def.hp=Math.max(0,def.hp-damage);let note=`${att.name} dealt ${damage} damage to ${def.name}.`;if(mult>1)note+=' It was super effective!';if(mult>0&&mult<1)note+=' It was not very effective…';if(mult===0)note+=' It had no effect!';if(crit>1)note+=' Critical hit!';addLog(note);if(def.hp<=0)addLog(`${def.name} fainted!`)}updateBattleView();if(!current(activeTeams[0])||!current(activeTeams[1]))finishBattle()}
+function finishBattle(){battleFinished=true;clearInterval(battleTimer);battleTimer=null;const alive0=activeTeams[0].filter(p=>p.hp>0).length,alive1=activeTeams[1].filter(p=>p.hp>0).length;const winner=alive0? 'Trainer 1':'Trainer 2';$('battle-result').innerHTML=`<span class="winner">🏆 ${winner} wins!</span> · ${alive0} vs ${alive1} Pokémon remaining`;$('pause-battle').disabled=true;$('skip-battle').disabled=true;$('rematch').disabled=false;addLog(`${winner} wins the battle!`)}
+function beginBattle(){if(battleTimer)clearInterval(battleTimer);activeTeams=teams.map(t=>t.map(p=>({...p,hp:p.maxHp})));logs=[];battleFinished=false;paused=false;turn=0;$('battle-result').textContent='Battle in progress…';$('battle-log').innerHTML='';$('pause-battle').disabled=false;$('pause-battle').textContent='Ⅱ Pause';$('skip-battle').disabled=false;$('rematch').disabled=true;updateBattleView();battleStep();if(!battleFinished)battleTimer=setInterval(()=>{if(!paused)battleStep()},Math.max(120,650/(+$('speed').value)))}
+$('start-battle').addEventListener('click',beginBattle);$('rematch').addEventListener('click',beginBattle);
+$('pause-battle').addEventListener('click',()=>{paused=!paused;$('pause-battle').textContent=paused?'▶ Resume':'Ⅱ Pause'});
+$('skip-battle').addEventListener('click',()=>{if(!activeTeams||battleFinished)return;while(!battleFinished)battleStep()});
+</script>
+</body>
+</html>
