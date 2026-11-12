@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#18213b">
-<title>Pokémon Randomizer & Battle</title>
+<title>Pokémon Generator & Trainer Battles</title>
 <style>
 :root{color-scheme:dark;--bg:#10172a;--panel:#1b2742;--panel2:#243352;--text:#f4f6ff;--muted:#b7c2dc;--gold:#ffd45c;--blue:#76b7ff;--red:#ff8585;--green:#8ce0a5}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#25385f 0,#10172a 48rem);color:var(--text);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -12,7 +12,7 @@ header{padding:28px 16px 18px;text-align:center}h1{font-size:clamp(1.6rem,5vw,2.
 main{max-width:1050px;margin:auto;padding:0 14px 48px}.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0 20px}
 button,select,input{font:inherit}button{border:0;border-radius:12px;padding:11px 15px;background:var(--gold);color:#20243a;font-weight:800;cursor:pointer}button:disabled{opacity:.5;cursor:wait}.tab{background:var(--panel2);color:var(--text)}.tab.active{background:var(--gold);color:#20243a}
 .panel{background:rgba(27,39,66,.96);border:1px solid #405277;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 12px 35px #0003}
-h2{margin:0 0 8px;font-size:1.35rem}h3{margin:0 0 8px}.muted,.hint{color:var(--muted)}.hint{font-size:.9rem}
+h2{margin:0 0 8px;font-size:1.35rem}h3{margin:0 0 8px}.muted,.hint{color:var(--muted)}.hint{font-size:.9rem}.odds-box{margin-top:16px;padding:9px 12px;border:1px solid #536789;border-radius:10px;background:#111c32;color:var(--muted);font-size:.82rem}.odds-box strong{color:var(--gold)}
 .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin:14px 0}.field{display:flex;flex-direction:column;gap:5px;min-width:130px;flex:1}.field label{font-size:.9rem;color:var(--muted)}select,input{width:100%;padding:10px;border-radius:10px;border:1px solid #536789;background:#111b30;color:var(--text)}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin-top:14px}.poke{background:#111c32;border:1px solid #3d5074;border-radius:15px;padding:12px;text-align:center;min-width:0}.poke img{width:100%;max-width:150px;aspect-ratio:1;object-fit:contain;image-rendering:auto}.poke h3{text-transform:capitalize;margin:3px 0}.types{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}.type{font-size:.75rem;padding:3px 8px;border-radius:20px;background:#344766;color:white;text-transform:capitalize}.shiny{color:var(--gold);font-weight:900}.status{min-height:1.5em;color:var(--muted);margin:10px 0}.hidden{display:none!important}
 .trainer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.trainer{background:#111c32;border:1px solid #3d5074;border-radius:14px;padding:13px}.checkline{display:flex;align-items:center;gap:8px;margin:10px 0;color:var(--muted)}.checkline input{width:auto}
@@ -22,7 +22,7 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:10px 16px 3
 </style>
 </head>
 <body>
-<header><h1>⚡ Pokémon Randomizer & Battle</h1><p>A free fan-made website · No account · No saving · No installation</p></header>
+<header><h1>⚡ Pokémon Generator & Trainer Battles</h1><p>A free fan-made website · No account · No saving · No installation</p></header>
 <main>
 <nav class="tabs" aria-label="Website modes">
 <button class="tab active" data-tab="generator">✨ Shiny & Pokémon Generator</button>
@@ -30,15 +30,15 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:10px 16px 3
 </nav>
 
 <section id="generator" class="panel">
-<h2>✨ Shiny & Pokémon Generator</h2>
+<h2>✨ Pokémon Generator</h2>
 <p class="muted">Generate one Pokémon or a team of six. Each Pokémon has its own independent <b>1 in 300</b> shiny chance.</p>
 <div class="controls">
-<div class="field"><label for="gen-count">How many?</label><select id="gen-count"><option value="1">1 Pokémon</option><option value="6">6 Pokémon</option></select></div>
+<div class="field"><label for="gen-count">How many?</label><select id="gen-count"><option value="1" selected>1 Pokémon</option><option value="2">2 Pokémon</option><option value="3">3 Pokémon</option><option value="4">4 Pokémon</option><option value="5">5 Pokémon</option><option value="6">6 Pokémon</option></select></div>
 <div class="field"><label for="gen-generation">Generation</label><select id="gen-generation"><option value="all">All generations</option><option value="1">Generation 1</option><option value="2">Generation 2</option><option value="3">Generation 3</option><option value="4">Generation 4</option><option value="5">Generation 5</option><option value="6">Generation 6</option><option value="7">Generation 7</option><option value="8">Generation 8</option><option value="9">Generation 9</option></select></div>
 <button id="generate">Generate Pokémon</button>
 </div>
 <div id="gen-status" class="status" role="status"></div><div id="gen-results" class="cards"></div>
-<p class="hint">A shiny is never guaranteed. The chance of at least one shiny increases with more independent encounters.</p>
+<div class="odds-box"><strong>✨ Shiny odds</strong><br>Each Pokémon has a 1 in 300 chance (0.333%) of being shiny. Every roll is independent — a shiny is never guaranteed.</div>
 </section>
 
 <section id="battle" class="panel hidden">
@@ -87,7 +87,7 @@ async function pokemon(id){if(cache.has(id))return cache.get(id);const p=await f
 function typeBadges(types){return `<div class="types">${types.map(t=>`<span class="type">${t}</span>`).join('')}</div>`}
 function card(p,shiny=false){return `<article class="poke"><img loading="lazy" src="${shiny?(p.shiny||p.sprite):p.sprite}" alt="${shiny?'Shiny':'Normal'} ${p.name}"><h3>${p.name.replaceAll('-',' ')}</h3>${typeBadges(p.types)}<p>${shiny?'<span class="shiny">✦ SHINY!</span>':'<span class="muted">Normal</span>'}</p></article>`}
 async function getRandomPokemon(lo,hi,filter=()=>true,used=new Set()){for(let tries=0;tries<80;tries++){const id=lo+Math.floor(Math.random()*(hi-lo+1));if(used.has(id))continue;const p=await pokemon(id);if(filter(p)){used.add(id);return p}}throw Error('Could not find enough Pokémon for those settings. Try a broader type selection.')}
-$('generate').addEventListener('click',async()=>{const btn=$('generate');btn.disabled=true;$('gen-results').innerHTML='';$('gen-status').textContent='Finding Pokémon…';try{const n=+$('gen-count').value,[lo,hi]=rangeFor($('gen-generation').value),used=new Set(),items=[];for(let i=0;i<n;i++){const p=await getRandomPokemon(lo,hi,()=>true,used);items.push({p,shiny:Math.random()<1/300})}$('gen-results').innerHTML=items.map(x=>card(x.p,x.shiny)).join('');const count=items.filter(x=>x.shiny).length;$('gen-status').textContent=count?`✨ You found ${count} shiny Pokémon!`:'No shiny this time — try again!'};}catch(e){$('gen-status').textContent=e.message}finally{btn.disabled=false}});
+$('generate').addEventListener('click',async()=>{const btn=$('generate');btn.disabled=true;$('gen-results').innerHTML='';$('gen-status').textContent='Finding Pokémon…';try{const n=+$('gen-count').value,[lo,hi]=rangeFor($('gen-generation').value),used=new Set(),items=[];for(let i=0;i<n;i++){const p=await getRandomPokemon(lo,hi,()=>true,used);items.push({p,shiny:Math.random()<1/300})}$('gen-results').innerHTML=items.map(x=>card(x.p,x.shiny)).join('');const count=items.filter(x=>x.shiny).length;$('gen-status').textContent=count?`✨ You found ${count} shiny Pokémon!`:'No shiny this time — try again!';}catch(e){$('gen-status').textContent=e.message}finally{btn.disabled=false}});
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));$('generator').classList.toggle('hidden',b.dataset.tab!=='generator');$('battle').classList.toggle('hidden',b.dataset.tab!=='battle')}));
 for(let t=1;t<=2;t++){for(const id of [`t${t}-type`,`t${t}-types`])$(id).innerHTML=typeNames.map(x=>`<option value="${x}">${x[0].toUpperCase()+x.slice(1)}</option>`).join('');$(`t${t}-mode`).addEventListener('change',e=>{const v=e.target.value;document.querySelector(`#t${t}-mode`).parentElement.parentElement.querySelector('.type-field').classList.toggle('hidden',v!=='single');document.querySelector(`#t${t}-mode`).parentElement.parentElement.querySelector('.multi-field').classList.toggle('hidden',v!=='multiple')})}
 function config(t){const mode=$(`t${t}-mode`).value;let types=[];if(mode==='single')types=[$(`t${t}-type`).value];if(mode==='multiple')types=[...$(`t${t}-types`).selectedOptions].map(o=>o.value);if(mode==='random')types=[pick(typeNames),pick(typeNames)];return {mode,types,size:+$(`t${t}-size`).value,level:Math.max(1,Math.min(100,+$(`t${t}-level`).value||50)),legend:$(`t${t}-legend`).checked}}
